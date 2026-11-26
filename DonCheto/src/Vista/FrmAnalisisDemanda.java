@@ -3,7 +3,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vista;
+import Modelo.DemandaProducto;
+import Modelo.DemandaCategoria;
+import Modelo.ResumenDemanda;
+import Servicio.ServicioBI;
 
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author luisg
@@ -15,9 +25,189 @@ public class FrmAnalisisDemanda extends javax.swing.JFrame {
     /**
      * Creates new form FrmAnalisisDemanda
      */
-    public FrmAnalisisDemanda() {
-        initComponents();
+    private final ServicioBI servicioBI = new ServicioBI();
+
+private static final int SIMULACION_ID = 1;
+
+public FrmAnalisisDemanda() {
+    initComponents();
+
+    setTitle("SATD - Análisis de demanda");
+    setLocationRelativeTo(null);
+    setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+    btnActualizar.addActionListener(e -> cargarDatos());
+
+    configurarTablas();
+    cargarDatos();
+}
+    
+    
+    private void configurarTablas() {
+
+        jTable1.setModel(new DefaultTableModel(
+                new Object[][]{},
+                new String[]{
+                    "Producto",
+                    "Categoria",
+                    "Unidades",
+                    "Promedio diario",
+                    "Ingresos",
+                    "Participacion"
+                }
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        });
+
+        tblCategorias.setModel(new DefaultTableModel(
+                new Object[][]{},
+                new String[]{
+                    "Categoria",
+                    "Unidades",
+                    "Ingresos",
+                    "Participacion"
+                }
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        });
+
+        jTable1.setAutoCreateRowSorter(true);
+        tblCategorias.setAutoCreateRowSorter(true);
     }
+
+    private void cargarDatos() {
+
+        btnActualizar.setEnabled(false);
+        lblEstado.setText("Consultando informacion...");
+
+        try {
+
+            // 1. Obtener resumen general
+            ResumenDemanda resumen =
+                    servicioBI.obtenerResumen(SIMULACION_ID);
+
+            lblUnidadesValor.setText(
+                    String.valueOf(resumen.getUnidades())
+            );
+
+            lblIngresosValor.setText(
+                    formatoMoneda(resumen.getIngresos())
+            );
+
+            lblProductosValor.setText(
+                    String.valueOf(resumen.getProductos())
+            );
+
+            lblDiasValor.setText(
+                    String.valueOf(resumen.getDias())
+            );
+
+            // 2. Calcular promedio diario general
+            BigDecimal promedio =
+                    servicioBI.obtenerPromedioDiarioGeneral(
+                            SIMULACION_ID
+                    );
+
+            lblSubtitulo.setText(
+                    "Promedio diario general: "
+                    + promedio.setScale(2,
+                            java.math.RoundingMode.HALF_UP)
+            );
+
+            // 3. Cargar demanda por producto
+            cargarTablaProductos(
+                    servicioBI.obtenerDemandaPorProducto(
+                            SIMULACION_ID
+                    )
+            );
+
+            // 4. Cargar demanda por categoria
+            cargarTablaCategorias(
+                    servicioBI.obtenerDemandaPorCategoria(
+                            SIMULACION_ID
+                    )
+            );
+
+            lblEstado.setText(
+                    "Informacion SIMULADA cargada correctamente"
+            );
+
+        } catch (SQLException e) {
+
+            lblEstado.setText("Error al consultar los datos");
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No fue posible cargar el analisis de demanda.\n"
+                    + e.getMessage(),
+                    "Error de consulta",
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+            e.printStackTrace();
+
+        } finally {
+
+            btnActualizar.setEnabled(true);
+        }
+    }
+
+    private void cargarTablaProductos(
+            List<DemandaProducto> productos) {
+
+        DefaultTableModel modelo =
+                (DefaultTableModel) jTable1.getModel();
+
+        modelo.setRowCount(0);
+
+        for (DemandaProducto p : productos) {
+
+            modelo.addRow(new Object[]{
+                p.getNombre(),
+                p.getCategoria(),
+                p.getUnidades(),
+                p.getPromedioDiario().setScale(
+                        2, java.math.RoundingMode.HALF_UP
+                ),
+                formatoMoneda(p.getIngresos()),
+                p.getParticipacion().toPlainString() + "%"
+            });
+        }
+    }
+
+    private void cargarTablaCategorias(
+            List<DemandaCategoria> categorias) {
+
+        DefaultTableModel modelo =
+                (DefaultTableModel) tblCategorias.getModel();
+
+        modelo.setRowCount(0);
+
+        for (DemandaCategoria c : categorias) {
+
+            modelo.addRow(new Object[]{
+                c.getCategoria(),
+                c.getUnidades(),
+                formatoMoneda(c.getIngresos()),
+                c.getParticipacion().toPlainString() + "%"
+            });
+        }
+    }
+
+    private String formatoMoneda(BigDecimal cantidad) {
+
+        DecimalFormat formato =
+                new DecimalFormat("$#,##0.00");
+
+        return formato.format(cantidad);
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.

@@ -56,4 +56,32 @@ public class ServicioBI {
                 .multiply(BigDecimal.valueOf(100))
                 .divide(BigDecimal.valueOf(total), 2, RoundingMode.HALF_UP);
     }
+    // Métodos compatibles con FrmAnalisisDemanda
+
+public List<DemandaProducto> obtenerDemandaPorProducto(int simulacionId)
+        throws SQLException {
+    return obtenerProductos(simulacionId);
+}
+
+public List<DemandaCategoria> obtenerDemandaPorCategoria(int simulacionId)
+        throws SQLException {
+    return obtenerCategorias(simulacionId);
+}
+
+public BigDecimal obtenerPromedioDiarioGeneral(int simulacionId)
+        throws SQLException {
+
+    ResumenDemanda resumen = obtenerResumen(simulacionId);
+
+    if (resumen.getDias() == 0) {
+        return BigDecimal.ZERO;
+    }
+
+    return BigDecimal.valueOf(resumen.getUnidades())
+            .divide(
+                    BigDecimal.valueOf(resumen.getDias()),
+                    2,
+                    RoundingMode.HALF_UP
+            );
+}
 }
