@@ -7,7 +7,6 @@ import ETL.TransformadorDatos.ResultadoTransformacion;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import OAD.OAD_Demanda;
 
 /**
  * Coordina Extract, Transform y Load.
