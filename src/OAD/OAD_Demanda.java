@@ -14,8 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Acceso a los datos analiticos de demanda. Todas las consultas se limitan
- * a la simulacion indicada y leen el catalogo operativo de productos.
+ * acceso a demanda
  */
 public class OAD_Demanda {
 

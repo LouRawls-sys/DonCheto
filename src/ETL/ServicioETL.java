@@ -23,18 +23,17 @@ public class ServicioETL {
                 throw new SQLException(
                         "No fue posible establecer la conexión con MySQL.");
             }
-
-            // EXTRACT
+            //extrae
             List<RegistroVenta> extraidos = extractor.extraer(conexion);
 
-            // TRANSFORM
+            //transforma
             ResultadoTransformacion transformacion =
                     transformador.transformar(extraidos);
 
             List<RegistroDemanda> transformados =
                     transformacion.getRegistros();
 
-            // LOAD
+            //te la cargo
             int cargados = cargador.cargar(conexion, transformados);
 
             return new ResultadoETL(

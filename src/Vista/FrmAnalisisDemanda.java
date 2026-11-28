@@ -28,36 +28,31 @@ public class FrmAnalisisDemanda extends javax.swing.JFrame {
      */
     private final ServicioBI servicioBI = new ServicioBI();
 
-private static final int SIMULACION_ID = 1;
+    private static final int SIMULACION_ID = 1;
 
-public FrmAnalisisDemanda() {
-    initComponents();
-
-    setTitle("SATD - Análisis de demanda");
-    setLocationRelativeTo(null);
-    setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-    btnActualizar.addActionListener(e -> cargarDatos());
-
-    configurarTablas();
-    agregarAccesoAnalisisTemporal();
-    cargarDatos();
-}
+    public FrmAnalisisDemanda() {
+        initComponents();
+        setTitle("SATD - Análisis de demanda");
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        btnActualizar.addActionListener(e -> cargarDatos());
+        configurarTablas();
+        agregarAccesoAnalisisTemporal();
+        cargarDatos();
+    }
     
     
     private void configurarTablas() {
-
-        jTable1.setModel(new DefaultTableModel(
-                new Object[][]{},
-                new String[]{
-                    "Producto",
-                    "Categoria",
-                    "Unidades",
-                    "Promedio diario",
-                    "Ingresos",
-                    "Participacion"
-                }
-        ) {
+        jTable1.setModel(new DefaultTableModel(new Object[][]{}, new String[]{
+            "Producto",
+            "Categoria",
+            "Unidades",
+            "Promedio diario",
+            "Ingresos",
+            "Participacion"
+            }
+        ) 
+        {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -89,51 +84,32 @@ public FrmAnalisisDemanda() {
         lblEstado.setText("Consultando informacion...");
 
         try {
-
-            // 1. Obtener resumen general
+            //resumen
             ResumenDemanda resumen =
                     servicioBI.obtenerResumen(SIMULACION_ID);
-
             lblUnidadesValor.setText(
                     String.valueOf(resumen.getUnidades())
             );
-
             lblIngresosValor.setText(
                     formatoMoneda(resumen.getIngresos())
             );
-
             lblProductosValor.setText(
                     String.valueOf(resumen.getProductos())
             );
-
             lblDiasValor.setText(
                     String.valueOf(resumen.getDias())
             );
+            //promedio
+            BigDecimal promedio = servicioBI.obtenerPromedioDiarioGeneral(SIMULACION_ID);
 
-            // 2. Calcular promedio diario general
-            BigDecimal promedio =
-                    servicioBI.obtenerPromedioDiarioGeneral(
-                            SIMULACION_ID
-                    );
+            lblSubtitulo.setText("Promedio diario general: " + promedio.setScale(2, java.math.RoundingMode.HALF_UP));
 
-            lblSubtitulo.setText(
-                    "Promedio diario general: "
-                    + promedio.setScale(2,
-                            java.math.RoundingMode.HALF_UP)
-            );
+            //demandacpor producto
+            cargarTablaProductos(servicioBI.obtenerDemandaPorProducto(SIMULACION_ID));
 
-            // 3. Cargar demanda por producto
-            cargarTablaProductos(
-                    servicioBI.obtenerDemandaPorProducto(
-                            SIMULACION_ID
-                    )
-            );
-
-            // 4. Cargar demanda por categoria
+            //demanda por categoria
             cargarTablaCategorias(
-                    servicioBI.obtenerDemandaPorCategoria(
-                            SIMULACION_ID
-                    )
+                    servicioBI.obtenerDemandaPorCategoria(SIMULACION_ID)
             );
 
             lblEstado.setText(
@@ -414,7 +390,7 @@ public FrmAnalisisDemanda() {
         ));
         scrCategorias.setViewportView(tblCategorias);
 
-        getContentPane().add(scrCategorias, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 230, 460, 280));
+        getContentPane().add(scrCategorias, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 230, 460, 210));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

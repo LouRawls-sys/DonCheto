@@ -16,18 +16,11 @@ public class VistaMenu extends javax.swing.JFrame {
      * Creates new form VistaMenu
      */
     public VistaMenu() {
-    initComponents();
+        initComponents();
 
-    setTitle("SATD - Don Cheto Wings");
-    setLocationRelativeTo(null);
-
-    BtnAnalisisDemanda.setText("Análisis de demanda");
-
-    BtnAnalisisDemanda.addActionListener(e -> {
-        FrmAnalisisDemanda ventana = new FrmAnalisisDemanda();
-        ventana.setVisible(true);
-    });
-}
+        setTitle("SATD - Don Cheto Wings");
+        setLocationRelativeTo(null);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -40,30 +33,53 @@ public class VistaMenu extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         BtnAnalisisDemanda = new javax.swing.JButton();
+        AnalisisTemporal = new javax.swing.JButton();
+        ETL = new javax.swing.JButton();
+        ModelosPredictivos = new javax.swing.JButton();
         Disposicion = new javax.swing.JDesktopPane();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 255));
 
-        BtnAnalisisDemanda.setText("jButton1");
+        BtnAnalisisDemanda.setText("analisis de la demanda");
+        BtnAnalisisDemanda.addActionListener(this::BtnAnalisisDemandaActionPerformed);
+
+        AnalisisTemporal.setText("analisis por tiempo");
+        AnalisisTemporal.addActionListener(this::AnalisisTemporalActionPerformed);
+
+        ETL.setText("ETL");
+        ETL.addActionListener(this::ETLActionPerformed);
+
+        ModelosPredictivos.setText("Modelos Predictivos");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(51, 51, 51)
-                .addComponent(BtnAnalisisDemanda)
-                .addContainerGap(74, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(25, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ModelosPredictivos)
+                    .addComponent(AnalisisTemporal)
+                    .addComponent(ETL)
+                    .addComponent(BtnAnalisisDemanda))
+                .addGap(26, 26, 26))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(143, 143, 143)
+                .addGap(69, 69, 69)
                 .addComponent(BtnAnalisisDemanda)
-                .addContainerGap(374, Short.MAX_VALUE))
+                .addGap(35, 35, 35)
+                .addComponent(AnalisisTemporal)
+                .addGap(38, 38, 38)
+                .addComponent(ETL)
+                .addGap(42, 42, 42)
+                .addComponent(ModelosPredictivos)
+                .addContainerGap(264, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 200, 540));
@@ -72,17 +88,41 @@ public class VistaMenu extends javax.swing.JFrame {
         Disposicion.setLayout(DisposicionLayout);
         DisposicionLayout.setHorizontalGroup(
             DisposicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 750, Short.MAX_VALUE)
+            .addGap(0, 820, Short.MAX_VALUE)
         );
         DisposicionLayout.setVerticalGroup(
             DisposicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 410, Short.MAX_VALUE)
+            .addGap(0, 450, Short.MAX_VALUE)
         );
 
-        getContentPane().add(Disposicion, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 130, 750, 410));
+        getContentPane().add(Disposicion, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 90, 820, 450));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel1.setText("Don Cheto");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 30, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void AnalisisTemporalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AnalisisTemporalActionPerformed
+        // TODO add your handling code here:
+        FrmAnalisisTemporal ventana = new FrmAnalisisTemporal();
+        ventana.setLocationRelativeTo(this);
+        ventana.setVisible(true);
+    }//GEN-LAST:event_AnalisisTemporalActionPerformed
+
+    private void BtnAnalisisDemandaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAnalisisDemandaActionPerformed
+        // TODO add your handling code here:
+        FrmAnalisisDemanda ventana = new FrmAnalisisDemanda();
+        ventana.setVisible(true);
+    }//GEN-LAST:event_BtnAnalisisDemandaActionPerformed
+
+    private void ETLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ETLActionPerformed
+        // TODO add your handling code here:
+        FrmETL ventana = new FrmETL();
+        ventana.setLocationRelativeTo(this);
+        ventana.setVisible(true);
+    }//GEN-LAST:event_ETLActionPerformed
 
     /**
      * @param args the command line arguments
@@ -110,8 +150,12 @@ public class VistaMenu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton AnalisisTemporal;
     private javax.swing.JButton BtnAnalisisDemanda;
     private javax.swing.JDesktopPane Disposicion;
+    private javax.swing.JButton ETL;
+    private javax.swing.JButton ModelosPredictivos;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

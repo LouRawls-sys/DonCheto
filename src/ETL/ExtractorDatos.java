@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Extrae las ventas operativas que ya fueron entregadas y pagadas.
- * No modifica ninguna tabla de origen.
+ * ventas pagadas
  */
 public class ExtractorDatos {
 
@@ -52,9 +51,7 @@ public class ExtractorDatos {
         return registros;
     }
 
-    /**
-     * DTO interno: representa una línea de detalle extraída del TPS.
-     */
+    //detalle de tps
     public static class RegistroVenta {
         private final int pedidoId;
         private final Timestamp fecha;
